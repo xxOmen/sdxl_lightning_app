@@ -29,9 +29,7 @@ if submitted:
         f"Scene 1: A Pinterest-style flat lay arranged on a soft beige or light gray background. Include a cohesive set of fashion items such as topwear, bottomwear, footwear, and 2–3 accessories. "
         f"Do not specify brand names or colors; allow for creative interpretation. Layout should be neat and visually appealing with soft directional lighting and natural shadows.\n\n"
 
-        f"Scene 2: A mannequin fully dressed in the complete outfit — including accessories and optional layering pieces like scarves, jackets, hats, or bags where appropriate. "
-        f"The mannequin should be posed in a minimalist studio setting with neutral lighting. Emphasize the textures, folds, and flow of different fabrics, with attention to stitching and silhouette. "
-        f"Present the look in a polished, editorial fashion style." 
+        f"Scene 2: A mannequin fully dressed in the **exact same outfit shown in Scene 1**, including all topwear, bottomwear, footwear, and accessories. Ensure the outfit on the mannequin perfectly matches the flat lay in color, material, and style. The mannequin should be posed in a minimalist studio setting with neutral lighting. Emphasize the textures, folds, and flow of different fabrics, with attention to stitching and silhouette. Present the look in a polished, editorial fashion style." 
     )
 
     if reference != "None":
