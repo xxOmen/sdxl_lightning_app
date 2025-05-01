@@ -17,22 +17,51 @@ with st.form("prompt_form"):
     custom_notes = st.text_area("Additional description (optional)", placeholder="e.g. include a leather belt or floral print")
     submitted = st.form_submit_button("Generate Prompt")
 
+# --- Season-based Material Mapping ---
+material_top = {
+    "Summer": "lightweight linen or breathable cotton shirt",
+    "Winter": "wool sweater or knit turtleneck",
+    "Spring": "cotton blouse or layered chambray shirt",
+    "Autumn": "corduroy shirt or flannel button-up",
+    "All Seasons": "versatile cotton or lightweight knit shirt"
+}
+
+material_bottom = {
+    "Summer": "linen trousers or chino shorts",
+    "Winter": "wool pants or thick denim jeans",
+    "Spring": "cotton chinos or pleated culottes",
+    "Autumn": "corduroy trousers or wool skirt",
+    "All Seasons": "neutral denim jeans or versatile trousers"
+}
+
+material_footwear = {
+    "Summer": "canvas sneakers or leather sandals",
+    "Winter": "leather boots or suede loafers",
+    "Spring": "white sneakers or lace-up oxfords",
+    "Autumn": "ankle boots or loafers",
+    "All Seasons": "clean sneakers or brogues"
+}
+
 # --- Generate Prompt ---
 if submitted:
+    top = material_top[season]
+    bottom = material_bottom[season]
+    shoes = material_footwear[season]
+
     prompt = (
         f"A styled fashion concept featuring a {gender.lower()} outfit designed for a {occasion.lower()} during the {season.lower()} season. "
-        f"The fashion aesthetic is {style.lower()}, inspired by current trends and season-appropriate colors.\n\n"
+        f"The fashion aesthetic is {style.lower()}, aligned with seasonal trends and color harmony.\n\n"
 
-        f"Scene 1: A Pinterest-style flat lay arrangement on a soft beige, stone gray, or off-white background. Include:\n"
-        f"- Topwear labeled by material and type (e.g., 'cotton t-shirt', 'linen blouse'),\n"
-        f"- Bottomwear (e.g., 'denim jeans', 'pleated wool skirt'),\n"
-        f"- Footwear (e.g., 'white leather sneakers', 'suede loafers'),\n"
-        f"- 2–3 accessories (e.g., 'canvas tote bag', 'stainless steel watch', 'acetate sunglasses').\n"
-        f"Ensure shadows are soft and item spacing is clean. Colors should reflect the chosen season and style (e.g., earthy for autumn, pastel for spring).\n\n"
+        f"Scene 1: A Pinterest-style flat lay arranged on a soft beige or light gray background. Include clearly labeled pieces:\n"
+        f"- Topwear: {top},\n"
+        f"- Bottomwear: {bottom},\n"
+        f"- Footwear: {shoes},\n"
+        f"- Accessories: a stainless steel watch, fabric tote bag, and acetate-frame sunglasses.\n"
+        f"Use soft directional lighting and natural shadows. Colors should reflect the season (e.g., earthy tones for autumn, brights for summer).\n\n"
 
-        f"Scene 2: A mannequin or model wearing the full coordinated outfit, including all core pieces and accessories — such as jacket, hat, socks, bag, and jewelry if suitable. "
-        f"Outfit should be worn naturally and posed in a minimalist studio setting. Emphasize realistic textures (cotton, wool, leather, denim), fabric folds, and light reflection. "
-        f"Use fashion catalog-style composition with centered framing and soft lighting."
+        f"Scene 2: A mannequin fully dressed in the same outfit — including all accessories and layering pieces like scarves, hats, or outerwear where appropriate. "
+        f"The mannequin should be standing in a clean studio setting with neutral lighting. Clearly show textures (linen, cotton, denim, wool), stitching detail, and natural fabric drape. "
+        f"Use high-fashion catalog-style framing with soft shadows and light bounce."
     )
 
     if custom_notes.strip():
