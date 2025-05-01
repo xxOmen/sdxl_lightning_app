@@ -1,42 +1,21 @@
 import streamlit as st
-import requests
-from PIL import Image
-from io import BytesIO
 
-# Hugging Face API info
-HF_API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2-1"
-HF_HEADERS = {"Authorization": f"Bearer {st.secrets['HF_API_KEY']}"}
-
-st.set_page_config(page_title="StyleMind AI", layout="centered")
-st.title("👕 StyleMind AI – Outfit Generator with Images")
-st.write("Generate stylish outfit visuals using Stable Diffusion 2.1 on Hugging Face.")
+st.set_page_config(page_title="StyleMind Prompt Generator", layout="centered")
+st.title("📝 StyleMind AI – Outfit Prompt Generator")
+st.write("Use this tool to generate descriptive outfit prompts for AI image tools.")
 
 # --- User Input Form ---
-with st.form("style_form"):
+with st.form("prompt_form"):
     occasion = st.selectbox("What is the occasion?", [
         "Date Night", "Office Meeting", "Beach Day", "Wedding Guest", "Travel", "Casual Outing", "Party", "Brunch"])
     gender = st.selectbox("Gender", ["Male", "Female", "Unisex"])
     season = st.selectbox("Season", ["Summer", "Winter", "Spring", "Autumn"])
     style = st.selectbox("Style Type", [
         "Casual", "Formal", "Streetwear", "Business Casual", "Beachwear", "Smart Casual"])
-    submitted = st.form_submit_button("Generate Outfit Image")
+    submitted = st.form_submit_button("Generate Prompt")
 
+# --- Generate Prompt ---
 if submitted:
-    prompt = f"Flat lay of a {style.lower()} {season.lower()} outfit for a {gender.lower()} attending a {occasion.lower()}. Include top, bottom, shoes, and accessories. Displayed on a clean background."
-
-    with st.spinner("Generating outfit image with Stable Diffusion 2.1..."):
-        try:
-            response = requests.post(
-                HF_API_URL,
-                headers=HF_HEADERS,
-                json={"inputs": prompt}
-            )
-
-            if response.status_code == 200:
-                image = Image.open(BytesIO(response.content))
-                st.success("Here is your outfit suggestion!")
-                st.image(image, caption="Outfit Suggestion", use_column_width=True)
-            else:
-                st.error(f"API Error {response.status_code}: {response.text}")
-        except Exception as e:
-            st.error(f"Error generating image: {e}")
+    prompt = f"A flat lay of a {style.lower()} outfit for a {gender.lower()} attending a {occasion.lower()} in {season.lower()}. Include topwear, bottomwear, shoes, and 1–2 accessories. Display on a clean background in Pinterest-style aesthetic."
+    st.success("Here is your generated prompt:")
+    st.code(prompt, language="text")
