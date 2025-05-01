@@ -1,67 +1,42 @@
-# Streamlit App for StyleMind AI – Image with Labels Display and Inspiration References
+# Streamlit App – StyleMind Outfit Prompt Generator (Text Only)
 
 import streamlit as st
-import openai
 
-# Load OpenAI API key from Streamlit secrets
-openai.api_key = st.secrets["OPENAI_API_KEY"]
-
-st.set_page_config(page_title="StyleMind AI", layout="wide")
-st.title("👕 StyleMind AI – Outfit Generator with Labels")
-st.write("Generate stylish outfit visuals using DALL·E 3 and show item labels alongside.")
+st.set_page_config(page_title="StyleMind Prompt Generator", layout="wide")
+st.title("📝 StyleMind AI – Outfit Prompt Generator")
+st.write("Generate rich, styled fashion prompts for use in AI tools like DALL·E, Midjourney, or for design moodboards.")
 
 # --- User Input Form ---
-with st.form("style_form"):
+with st.form("prompt_form"):
     occasion = st.selectbox("What is the occasion?", [
         "Date Night", "Office Meeting", "Beach Day", "Wedding Guest", "Travel", "Casual Outing", "Party", "Brunch"])
     gender = st.selectbox("Gender", ["Male", "Female", "Unisex"])
     season = st.selectbox("Season", ["Summer", "Winter", "Spring", "Autumn"])
     style = st.selectbox("Style Type", [
         "Casual", "Formal", "Streetwear", "Business Casual", "Beachwear", "Smart Casual"])
-    reference = st.selectbox("Visual reference or fashion inspiration:", [
-        "None", "Pinterest outfit flat lays", "Zara catalog aesthetic", "Outfits worn by Timothée Chalamet", "Gigi Hadid streetwear", 
-        "Old Money TikTok trend", "Taylor Swift folklore tour", "Korean drama male leads", "Euphoria series style", 
-        "Instagram influencer fits", "Uniqlo minimalist campaigns"])
-    submitted = st.form_submit_button("Generate Outfit Images")
+    reference = st.selectbox("Fashion Inspiration Reference:", [
+        "None", "Outfits from Euphoria characters", "Timothée Chalamet street style", "Gigi Hadid off-duty looks", 
+        "Old Money aesthetic from TikTok", "Pinterest flat lays", "Zara catalog 2024", "Uniqlo minimalist ads", 
+        "Instagram fashion influencers", "Emily in Paris aesthetic", "Met Gala celebrity themes"])
+    custom = st.text_area("Custom Notes (optional)", placeholder="e.g. include an oversized blazer or earthy tones")
+    submitted = st.form_submit_button("Generate Outfit Prompt")
 
 if submitted:
-    prompt = f"A flat lay of a {style.lower()} outfit for a {gender.lower()} attending a {occasion.lower()} in {season.lower()}. Include a linen or cotton shirt, chino pants or denim jeans, loafers or sneakers, and 1–2 accessories such as sunglasses or a watch. Display all items arranged neatly on a clean white or beige background."
+    prompt = (
+        f"A flat lay of a {style.lower()} outfit for a {gender.lower()} attending a {occasion.lower()} in {season.lower()}. "
+        f"Include a linen or cotton shirt, chino pants or denim jeans, loafers or sneakers, and 1–2 accessories such as sunglasses or a watch. "
+        f"Display all items arranged neatly on a clean white or beige background."
+    )
 
     if reference != "None":
-        prompt += f" The outfit and layout should be visually inspired by {reference.lower()}, reflecting current fashion trends, celebrity influences, and popular editorial aesthetics."
-        prompt += " Use season-specific color palettes, current layering techniques, and textile combinations commonly seen in designer campaigns and celebrity streetwear."
+        prompt += (
+            f" The overall outfit style and visual layout should be inspired by {reference.lower()}, "
+            f"reflecting current fashion trends, seasonal color palettes, and editorial styling used by celebrities, influencers, and fashion magazines. "
+            f"Include modern layering, seasonal materials, and trending styling choices often seen in designer campaigns or pop culture looks."
+        )
 
-    image_urls = []
-    with st.spinner("Generating 4 outfit images with DALL·E 3..."):
-        for _ in range(4):
-            try:
-                response = openai.images.generate(
-                    model="dall-e-3",
-                    prompt=prompt,
-                    size="1024x1024",
-                    quality="standard",
-                    n=1
-                )
-                image_urls.append(response.data[0].url)
-            except Exception as e:
-                st.error(f"Error generating image: {e}")
+    if custom.strip():
+        prompt += f" Additional styling notes: {custom.strip()}"
 
-    if image_urls:
-        st.success("Here are your outfit suggestions with labeled items!")
-        labels = [
-            ["Linen shirt", "Chino trousers", "Leather loafers", "Stainless steel watch", "Sunglasses"],
-            ["Cotton t-shirt", "Denim jeans", "Canvas sneakers", "Canvas tote bag", "Watch"],
-            ["Flannel overshirt", "Corduroy pants", "Suede boots", "Wool scarf", "Leather strap watch"],
-            ["Button-down shirt", "Slim chinos", "Sneakers", "Messenger bag", "Wayfarer sunglasses"]
-        ]
-
-        for i, url in enumerate(image_urls):
-            cols = st.columns([2, 1])
-            with cols[0]:
-                st.image(url, caption=f"Outfit Suggestion {i+1}", use_column_width=True)
-            with cols[1]:
-                st.markdown("**Items Included:**")
-                for item in labels[i]:
-                    st.markdown(f"- {item}")
-    else:
-        st.warning("No images were generated. Please try again.")
+    st.success("Here is your outfit prompt:")
+    st.code(prompt, language="text")
