@@ -1,5 +1,3 @@
-# Streamlit App – Advanced Outfit Prompt Generator with Customization
-
 import streamlit as st
 
 st.set_page_config(page_title="StyleMind Prompt Generator", layout="centered")
@@ -23,12 +21,10 @@ with st.form("prompt_form"):
 if submitted:
     prompt = (
         f"A fashion visual featuring a {gender.lower()} outfit for a {occasion.lower()} in {season.lower()}. "
-        f"The style is {style.lower()}.
-\n\n"
+        f"The style is {style.lower()}.\n\n"
         f"Scene 1: A Pinterest-style flat lay arranged on a soft beige or off-white background. Includes styled topwear "
         f"(e.g., shirt or blouse), bottomwear (e.g., chinos, skirt), matching footwear (e.g., loafers, sneakers), and 1–2 accessories "
-        f"(watch, sunglasses, bracelet, handbag). Subtle shadows and neutral lighting for a modern aesthetic.
-\n\n"
+        f"(watch, sunglasses, bracelet, handbag). Subtle shadows and neutral lighting for a modern aesthetic.\n\n"
         f"Scene 2: A mannequin wearing the same outfit, posed naturally in front of a simple light-colored background. "
         f"Include visible fabric textures, folds, and accurate color coordination. The focus should be on clean presentation "
         f"with a minimalistic editorial look. Use soft shadows and centered framing."
