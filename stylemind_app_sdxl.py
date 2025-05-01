@@ -21,7 +21,16 @@ with st.form("style_form"):
     submitted = st.form_submit_button("Generate Outfit Images")
 
 if submitted:
+    reference = st.selectbox("Visual reference or fashion inspiration:", [
+    "None", "Pinterest outfit flat lays", "Zara catalog aesthetic", "Outfits worn by Timothée Chalamet", "Gigi Hadid streetwear", 
+    "Old Money TikTok trend", "Taylor Swift folklore tour", "Korean drama male leads", "Euphoria series style", 
+    "Instagram influencer fits", "Uniqlo minimalist campaigns"])
+
     prompt = f"A flat lay of a {style.lower()} outfit for a {gender.lower()} attending a {occasion.lower()} in {season.lower()}. Include a linen or cotton shirt, chino pants or denim jeans, loafers or sneakers, and 1–2 accessories such as sunglasses or a watch. Display all items arranged neatly on a clean white or beige background."
+
+    if reference != "None":
+        prompt += f" The outfit and layout should be visually inspired by {reference.lower()}, reflecting current fashion trends and styling cues."
+        prompt += " Use current seasonal color palettes, item layering, and materials trending in modern fashion editorials."
 
     image_urls = []
     with st.spinner("Generating 4 outfit images with DALL·E 3..."):
