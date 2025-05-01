@@ -1,71 +1,59 @@
-import streamlit as st
+# Streamlit App for StyleMind AI – Image with Labels Display
 
-st.set_page_config(page_title="StyleMind Prompt Generator", layout="centered")
-st.title("📝 StyleMind AI – Advanced Outfit Prompt Generator")
-st.write("Generate rich, styled outfit prompts for DALL·E, Midjourney, or any AI tool.")
+import streamlit as st
+import openai
+
+# Load OpenAI API key from Streamlit secrets
+openai.api_key = st.secrets["OPENAI_API_KEY"]
+
+st.set_page_config(page_title="StyleMind AI", layout="wide")
+st.title("👕 StyleMind AI – Outfit Generator with Labels")
+st.write("Generate stylish outfit visuals using DALL·E 3 and show item labels alongside.")
 
 # --- User Input Form ---
-with st.form("prompt_form"):
+with st.form("style_form"):
     occasion = st.selectbox("What is the occasion?", [
-        "Date Night", "Office Meeting", "Beach Day", "Wedding Guest", "Travel", "Casual Outing",
-        "Party", "Brunch", "Outdoor Hike", "Festival", "Dinner with Friends", "Work From Home"])
-    gender = st.selectbox("Gender", ["Male", "Female", "Unisex", "Non-Binary", "Other"])
-    season = st.selectbox("Season", ["Summer", "Winter", "Spring", "Autumn", "All Seasons"])
+        "Date Night", "Office Meeting", "Beach Day", "Wedding Guest", "Travel", "Casual Outing", "Party", "Brunch"])
+    gender = st.selectbox("Gender", ["Male", "Female", "Unisex"])
+    season = st.selectbox("Season", ["Summer", "Winter", "Spring", "Autumn"])
     style = st.selectbox("Style Type", [
-        "Casual", "Formal", "Streetwear", "Business Casual", "Beachwear", "Smart Casual",
-        "Athleisure", "Boho", "Preppy", "Minimalist", "Techwear"])
-    custom_notes = st.text_area("Additional description (optional)", placeholder="e.g. include a leather belt or floral print")
-    submitted = st.form_submit_button("Generate Prompt")
+        "Casual", "Formal", "Streetwear", "Business Casual", "Beachwear", "Smart Casual"])
+    submitted = st.form_submit_button("Generate Outfit Images")
 
-# --- Season-based Material Mapping ---
-material_top = {
-    "Summer": "lightweight linen or breathable cotton shirt",
-    "Winter": "wool sweater or knit turtleneck",
-    "Spring": "cotton blouse or layered chambray shirt",
-    "Autumn": "corduroy shirt or flannel button-up",
-    "All Seasons": "versatile cotton or lightweight knit shirt"
-}
-
-material_bottom = {
-    "Summer": "linen trousers or chino shorts",
-    "Winter": "wool pants or thick denim jeans",
-    "Spring": "cotton chinos or pleated culottes",
-    "Autumn": "corduroy trousers or wool skirt",
-    "All Seasons": "neutral denim jeans or versatile trousers"
-}
-
-material_footwear = {
-    "Summer": "canvas sneakers or leather sandals",
-    "Winter": "leather boots or suede loafers",
-    "Spring": "white sneakers or lace-up oxfords",
-    "Autumn": "ankle boots or loafers",
-    "All Seasons": "clean sneakers or brogues"
-}
-
-# --- Generate Prompt ---
 if submitted:
-    top = material_top[season]
-    bottom = material_bottom[season]
-    shoes = material_footwear[season]
+    prompt = f"A flat lay of a {style.lower()} outfit for a {gender.lower()} attending a {occasion.lower()} in {season.lower()}. Include a linen or cotton shirt, chino pants or denim jeans, loafers or sneakers, and 1–2 accessories such as sunglasses or a watch. Display all items arranged neatly on a clean white or beige background."
 
-    prompt = (
-        f"A styled fashion concept featuring a {gender.lower()} outfit designed for a {occasion.lower()} during the {season.lower()} season. "
-        f"The fashion aesthetic is {style.lower()}, aligned with seasonal trends and color harmony.\n\n"
+    image_urls = []
+    with st.spinner("Generating 4 outfit images with DALL·E 3..."):
+        for _ in range(4):
+            try:
+                response = openai.images.generate(
+                    model="dall-e-3",
+                    prompt=prompt,
+                    size="1024x1024",
+                    quality="standard",
+                    n=1
+                )
+                image_urls.append(response.data[0].url)
+            except Exception as e:
+                st.error(f"Error generating image: {e}")
 
-        f"Scene 1: A Pinterest-style flat lay arranged on a soft beige or light gray background. Include clearly labeled pieces:\n"
-        f"- Topwear: {top},\n"
-        f"- Bottomwear: {bottom},\n"
-        f"- Footwear: {shoes},\n"
-        f"- Accessories: a stainless steel watch, fabric tote bag, and acetate-frame sunglasses.\n"
-        f"Use soft directional lighting and natural shadows. Colors should reflect the season (e.g., earthy tones for autumn, brights for summer).\n\n"
+    if image_urls:
+        st.success("Here are your outfit suggestions with labeled items!")
+        labels = [
+            ["Linen shirt", "Chino trousers", "Leather loafers", "Stainless steel watch", "Sunglasses"],
+            ["Cotton t-shirt", "Denim jeans", "Canvas sneakers", "Canvas tote bag", "Watch"],
+            ["Flannel overshirt", "Corduroy pants", "Suede boots", "Wool scarf", "Leather strap watch"],
+            ["Button-down shirt", "Slim chinos", "Sneakers", "Messenger bag", "Wayfarer sunglasses"]
+        ]
 
-        f"Scene 2: A mannequin fully dressed in the same outfit — including all accessories and layering pieces like scarves, hats, or outerwear where appropriate. "
-        f"The mannequin should be standing in a clean studio setting with neutral lighting. Clearly show textures (linen, cotton, denim, wool), stitching detail, and natural fabric drape. "
-        f"Use high-fashion catalog-style framing with soft shadows and light bounce."
-    )
-
-    if custom_notes.strip():
-        prompt += f"\n\nAdditional styling notes: {custom_notes.strip()}"
-
-    st.success("Here is your styled outfit prompt:")
-    st.code(prompt, language="text")
+        for i, url in enumerate(image_urls):
+            cols = st.columns([2, 1])
+            with cols[0]:
+                st.image(url, caption=f"Outfit Suggestion {i+1}", use_column_width=True)
+            with cols[1]:
+                st.markdown("**Items Included:**")
+                for item in labels[i]:
+                    st.markdown(f"- {item}")
+    else:
+        st.warning("No images were generated. Please try again.")
