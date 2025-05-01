@@ -1,16 +1,15 @@
-
 import streamlit as st
 import requests
 from PIL import Image
 from io import BytesIO
 
 # Hugging Face API info
-HF_API_URL = "https://api-inference.huggingface.co/models/ByteDance/SDXL-Lightning"
+HF_API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2-1"
 HF_HEADERS = {"Authorization": f"Bearer {st.secrets['HF_API_KEY']}"}
 
 st.set_page_config(page_title="StyleMind AI", layout="centered")
 st.title("👕 StyleMind AI – Outfit Generator with Images")
-st.write("Generate stylish outfit visuals using Hugging Face's SDXL-Lightning.")
+st.write("Generate stylish outfit visuals using Stable Diffusion 2.1 on Hugging Face.")
 
 # --- User Input Form ---
 with st.form("style_form"):
@@ -25,7 +24,7 @@ with st.form("style_form"):
 if submitted:
     prompt = f"Flat lay of a {style.lower()} {season.lower()} outfit for a {gender.lower()} attending a {occasion.lower()}. Include top, bottom, shoes, and accessories. Displayed on a clean background."
 
-    with st.spinner("Generating outfit image with SDXL-Lightning..."):
+    with st.spinner("Generating outfit image with Stable Diffusion 2.1..."):
         try:
             response = requests.post(
                 HF_API_URL,
