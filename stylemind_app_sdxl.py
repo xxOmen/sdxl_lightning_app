@@ -20,14 +20,19 @@ with st.form("prompt_form"):
 # --- Generate Prompt ---
 if submitted:
     prompt = (
-        f"A fashion visual featuring a {gender.lower()} outfit for a {occasion.lower()} in {season.lower()}. "
-        f"The style is {style.lower()}.\n\n"
-        f"Scene 1: A Pinterest-style flat lay arranged on a soft beige or off-white background. Includes styled topwear "
-        f"(e.g., shirt or blouse), bottomwear (e.g., chinos, skirt), matching footwear (e.g., loafers, sneakers), and 1–2 accessories "
-        f"(watch, sunglasses, bracelet, handbag). Subtle shadows and neutral lighting for a modern aesthetic.\n\n"
-        f"Scene 2: A mannequin wearing the same outfit, posed naturally in front of a simple light-colored background. "
-        f"Include visible fabric textures, folds, and accurate color coordination. The focus should be on clean presentation "
-        f"with a minimalistic editorial look. Use soft shadows and centered framing."
+        f"A styled fashion concept featuring a {gender.lower()} outfit designed for a {occasion.lower()} during the {season.lower()} season. "
+        f"The fashion aesthetic is {style.lower()}, inspired by current trends and season-appropriate colors.\n\n"
+
+        f"Scene 1: A Pinterest-style flat lay arrangement on a soft beige, stone gray, or off-white background. Include:\n"
+        f"- Topwear labeled by material and type (e.g., 'cotton t-shirt', 'linen blouse'),\n"
+        f"- Bottomwear (e.g., 'denim jeans', 'pleated wool skirt'),\n"
+        f"- Footwear (e.g., 'white leather sneakers', 'suede loafers'),\n"
+        f"- 2–3 accessories (e.g., 'canvas tote bag', 'stainless steel watch', 'acetate sunglasses').\n"
+        f"Ensure shadows are soft and item spacing is clean. Colors should reflect the chosen season and style (e.g., earthy for autumn, pastel for spring).\n\n"
+
+        f"Scene 2: A mannequin or model wearing the full coordinated outfit, including all core pieces and accessories — such as jacket, hat, socks, bag, and jewelry if suitable. "
+        f"Outfit should be worn naturally and posed in a minimalist studio setting. Emphasize realistic textures (cotton, wool, leather, denim), fabric folds, and light reflection. "
+        f"Use fashion catalog-style composition with centered framing and soft lighting."
     )
 
     if custom_notes.strip():
