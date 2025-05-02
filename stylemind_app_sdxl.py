@@ -2,7 +2,7 @@ import streamlit as st
 
 st.set_page_config(page_title="StyleMind Prompt Generator", layout="wide")
 st.title("📝 StyleMind AI – Outfit Prompt Generator")
-st.write("Generate rich, styled fashion prompts for use in AI tools like DALL·E, Midjourney, or for design moodboards.")
+st.write("Elevate your fashion game with your personal AI stylist, creating curated fashion prompts that bring your style vision to life")
 
 # --- User Input Form ---
 with st.form("prompt_form"):
