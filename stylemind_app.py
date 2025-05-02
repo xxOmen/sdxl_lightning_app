@@ -34,14 +34,25 @@ if submitted:
     if not (occasion and gender and season and style):  # Simple validation
         st.warning("Please make sure all fields are selected.")
     else:
+        # Define the prompt template with grid-based layout for items
         prompt = (
-            f"A styled fashion concept featuring a {gender.lower()} outfit designed for a {occasion.lower()} during the {season.lower()} season. "
+            f"**Outfit Grid Generator** for a {gender.lower()} designed for a {occasion.lower()} in the {season.lower()} season. "
             f"The fashion aesthetic is {style.lower()}, aligned with seasonal trends and color harmony.\n\n"
 
-            f"Scene 1: A Pinterest-style flat lay arranged on a soft beige or light gray background. Include a cohesive set of fashion items such as topwear, bottomwear, footwear, and 2–3 accessories. "
-            f"Do not specify brand names or colors; allow for creative interpretation. Layout should be neat and visually appealing with soft directional lighting and natural shadows.\n\n"
+            f"Generate a grid of outfits, each with clearly defined clothing items and accessories. Include outfits with multiple combinations of shirts, jackets, pants, footwear, and accessories in each row, and ensure color harmony across items.\n\n"
+        )
 
-            f"Scene 2: A mannequin fully dressed in the **exact same outfit shown in Scene 1**, including all topwear, bottomwear, footwear, and accessories. Ensure the outfit on the mannequin perfectly matches the flat lay in color, material, and style. The mannequin should be posed in a minimalist studio setting with neutral lighting. Emphasize the textures, folds, and flow of different fabrics, with attention to stitching and silhouette. Present the look in a polished, editorial fashion style." 
+        # Scene 1: Grid-based layout
+        prompt += (
+            f"Scene 1: A Pinterest-style grid display with multiple outfits. Each outfit features distinct clothing items with clear color palettes. "
+            f"Example 1: Beige linen shirt, olive green chinos, white sneakers, and simple accessories like a watch and sunglasses. "
+            f"Example 2: Dark grey wool sweater, navy denim pants, leather boots, scarf. Each outfit should be laid out with attention to textures and color balance.\n\n"
+        )
+
+        # Scene 2: Full outfit on a mannequin
+        prompt += (
+            f"Scene 2: A mannequin fully dressed in each complete outfit from Scene 1. Ensure the mannequin's pose shows off the full outfit clearly, "
+            f"with close-up shots that highlight fabric textures, colors, and details like stitching and folds.\n\n"
         )
 
         if reference != "None":
