@@ -1,55 +1,74 @@
 import streamlit as st
+import pandas as pd
+import random
 
-st.set_page_config(page_title="StyleMind Prompt Generator", layout="wide")
+# Page config
+st.set_page_config(page_title="StyleMind AI – Outfit Prompt Generator", layout="wide")
 st.title("📝 StyleMind AI – Outfit Prompt Generator")
-st.write("Generate rich, styled fashion prompts for use in AI tools like DALL·E, Midjourney, or for design moodboards.")
+st.write("Create unique, AI-powered fashion prompts with personalized suggestions and real-time inspiration.")
 
-# --- User Input Form ---
+# Sample user profile data (for simplicity in this example)
+user_data = {
+    "username": ["user1", "user2"],
+    "style": ["Casual", "Formal"],
+    "favorite_colors": ["Blue", "Black"],
+    "body_type": ["Athletic", "Slim"]
+}
+
+# User Profile
+user_df = pd.DataFrame(user_data)
+user_profile = st.sidebar.selectbox("Select Your Fashion Profile", user_df['style'].unique())
+
+# User Input Form
 with st.form("prompt_form"):
     occasion = st.selectbox("What is the occasion?", [
-        "Date Night", "Office Meeting", "Beach Day", "Wedding Guest", "Travel", "Casual Outing", "Party", "Brunch"],
-        help="Select the occasion for which the outfit is being generated.")
+        "Date Night", "Office Meeting", "Beach Day", "Wedding Guest", "Casual Outing", "Travel", "Party", "Brunch"])
     
-    gender = st.selectbox("Gender", ["Male", "Female", "Unisex"], help="Choose the gender for the outfit.")
+    gender = st.selectbox("Gender", ["Male", "Female", "Unisex"])
     
-    season = st.selectbox("Season", ["Summer", "Winter", "Spring", "Autumn"], help="Choose the season to match the outfit.")
+    season = st.selectbox("Season", ["Summer", "Winter", "Spring", "Autumn"])
     
-    style = st.selectbox("Style Type", [
-        "Casual", "Formal", "Streetwear", "Business Casual", "Beachwear", "Smart Casual"], 
-        help="Select the style type of the outfit.")
+    style = st.selectbox("Style Type", ["Casual", "Formal", "Streetwear", "Business Casual", "Beachwear", "Smart Casual"])
     
-    reference = st.selectbox("Fashion Inspiration Reference:", [
-        "None", "Outfits from Euphoria characters", "Timothée Chalamet street style", "Gigi Hadid off-duty looks", 
-        "Old Money aesthetic from TikTok", "Pinterest flat lays", "Zara catalog 2024", "Uniqlo minimalist ads", 
-        "Instagram fashion influencers", "Emily in Paris aesthetic", "Met Gala celebrity themes"],
-        help="Select a fashion inspiration reference, if any.")
+    reference = st.selectbox("Fashion Inspiration Reference:", ["None", "Pinterest", "Met Gala", "Instagram Influencers"])
     
-    custom = st.text_area("Custom Notes (optional)", placeholder="e.g. include an oversized blazer or earthy tones",
-                          help="Add any specific styling preferences here.")
+    custom = st.text_area("Custom Notes (optional)", placeholder="e.g. Include an oversized blazer or earthy tones")
     
-    submitted = st.form_submit_button("Generate Outfit Prompt")
+    submit_button = st.form_submit_button("Generate Outfit Prompt")
 
-# --- Processing Form Submission ---
-if submitted:
-    if not (occasion and gender and season and style):  # Simple validation
-        st.warning("Please make sure all fields are selected.")
-    else:
-        prompt = (
-            f"A styled fashion concept featuring a {gender.lower()} outfit designed for a {occasion.lower()} during the {season.lower()} season. "
-            f"The fashion aesthetic is {style.lower()}, aligned with seasonal trends and color harmony.\n\n"
+# Generate Outfit Prompt
+if submit_button:
+    prompt = f"A styled {gender.lower()} outfit for a {occasion.lower()} in the {season.lower()} season. "
+    prompt += f"The style is {style.lower()}, reflecting seasonal trends and harmonizing colors."
 
-            f"Scene 1: A Pinterest-style flat lay arranged on a soft beige or light gray background. Include a cohesive set of fashion items such as topwear, bottomwear, footwear, and 2–3 accessories. "
-            f"Do not specify brand names or colors; allow for creative interpretation. Layout should be neat and visually appealing with soft directional lighting and natural shadows.\n\n"
+    if reference != "None":
+        prompt += f"\nVisual inspiration comes from {reference.lower()}."
 
-            f"Scene 2: A mannequin fully dressed in the **exact same outfit shown in Scene 1**, including all topwear, bottomwear, footwear, and accessories. Ensure the outfit on the mannequin perfectly matches the flat lay in color, material, and style. The mannequin should be posed in a minimalist studio setting with neutral lighting. Emphasize the textures, folds, and flow of different fabrics, with attention to stitching and silhouette. Present the look in a polished, editorial fashion style." 
-        )
+    if custom.strip():
+        prompt += f"\nCustom notes: {custom.strip()}"
 
-        if reference != "None":
-            prompt += f"\n\nVisual inspiration is drawn from {reference.lower()}, known for its influence on fashion culture and contemporary styling."
+    st.write("### Fashion Prompt")
+    st.code(prompt, language="text")
 
-        if custom.strip():
-            prompt += f"\n\nAdditional styling notes: {custom.strip()}"
+    # Add AI-Generated Outfit Image Preview (mocked)
+    outfit_image = f"generated_outfit_images/{random.randint(1, 10)}.jpg"
+    st.image(outfit_image, caption="Generated Outfit Example")
 
-        st.success("Here is your outfit prompt:")
-        st.markdown("### Fashion Prompt")
-        st.code(prompt, language="text")
+    # Shopping Links
+    st.write("You can purchase similar outfits from the following stores:")
+    st.markdown("[Shop ASOS](https://www.asos.com) | [Shop Zara](https://www.zara.com) | [Shop Amazon](https://www.amazon.com)")
+
+    # Real-Time Fashion Inspiration Feed
+    st.write("### Fashion Inspiration")
+    st.write("Check out the latest trends from Instagram, Pinterest, and more!")
+
+    # Fashion Challenges
+    st.write("### Fashion Challenges")
+    st.write("Submit your outfit for the Weekly Fashion Challenge!")
+
+    # Social Sharing
+    st.write("### Share Your Outfit")
+    st.write("Share your outfit with your friends on social media!")
+    
+    if st.button('Share on Instagram'):
+        st.write("Outfit shared on Instagram!")
